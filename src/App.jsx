@@ -217,97 +217,169 @@ export default function PAEPUltimateApp() {
 
   // --- UI COMPONENTS ---
 
-  const MenuScreen = () => (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4 text-slate-800 font-sans relative">
-      <div className="max-w-md w-full bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden relative z-10 mb-8">
-        <div className="bg-gradient-to-r from-blue-900 to-indigo-900 p-8 text-white text-center relative">
-          <Brain className="w-16 h-16 mx-auto mb-4 text-blue-300 opacity-90" />
-          <h1 className="text-3xl font-extrabold tracking-tight">PAEP<span className="text-blue-400">Pro</span></h1>
-          <p className="text-blue-200 text-sm font-medium mt-1">Plataforma de Estudio Integral</p>
-          <div className="absolute top-4 right-4 text-[10px] bg-white/10 px-2 py-0.5 rounded-full font-mono opacity-80">
-            v{APP_VERSION}
-          </div>
+  // Componente de Confetti
+  const Confetti = () => {
+    const colors = ['#6366f1', '#8b5cf6', '#ec4899', '#10b981', '#f59e0b', '#06b6d4'];
+    const confettiPieces = [...Array(50)].map((_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      delay: Math.random() * 0.5,
+      duration: 2 + Math.random() * 2,
+      color: colors[Math.floor(Math.random() * colors.length)]
+    }));
+
+    return (
+      <>
+        {confettiPieces.map((piece) => (
+          <div
+            key={piece.id}
+            className="confetti"
+            style={{
+              left: `${piece.left}%`,
+              animationDelay: `${piece.delay}s`,
+              animationDuration: `${piece.duration}s`,
+              backgroundColor: piece.color
+            }}
+          />
+        ))}
+      </>
+    );
+  };
+
+  const MenuScreen = () => {
+    const categories = [
+      { id: 'All', label: 'Mix Total', icon: <Layers size={22} />, sub: '50 Pregs', gradient: 'var(--cat-mix)', bgLight: 'bg-emerald-50', textColor: 'text-black', borderColor: 'border-emerald-400' },
+      { id: 'Verbal', label: 'Verbal', icon: <BookOpen size={22} />, sub: '10 Pregs', gradient: 'var(--cat-verbal)', bgLight: 'bg-amber-50', textColor: 'text-black', borderColor: 'border-amber-400' },
+      { id: 'Matemáticas', label: 'Mate', icon: <Calculator size={22} />, sub: '10 Pregs', gradient: 'var(--cat-math)', bgLight: 'bg-purple-50', textColor: 'text-black', borderColor: 'border-purple-400' },
+      { id: 'Cognitiva', label: 'Cognitiva', icon: <Brain size={22} />, sub: '10 Pregs', gradient: 'var(--cat-cognitive)', bgLight: 'bg-blue-50', textColor: 'text-black', borderColor: 'border-blue-400' },
+      { id: 'Redacción', label: 'Redacción', icon: <PenTool size={22} />, sub: '10 Pregs', gradient: 'var(--cat-writing)', bgLight: 'bg-pink-50', textColor: 'text-black', borderColor: 'border-pink-400' },
+      { id: 'Inglés', label: 'Inglés', icon: <Globe size={22} />, sub: '10 Pregs', gradient: 'var(--cat-english)', bgLight: 'bg-cyan-50', textColor: 'text-black', borderColor: 'border-cyan-400' },
+    ];
+
+    return (
+      <div className="min-h-screen relative flex flex-col items-center justify-center p-4 text-black font-sans overflow-hidden">
+        {/* Partículas flotantes mejoradas */}
+        <div className="particles">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="particle"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 4}s`,
+                animationDuration: `${3 + Math.random() * 3}s`,
+                width: `${4 + Math.random() * 4}px`,
+                height: `${4 + Math.random() * 4}px`,
+                opacity: 0.3 + Math.random() * 0.4
+              }}
+            />
+          ))}
         </div>
 
-        <div className="p-6 space-y-6">
-          <div>
-            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-              <Layers size={14} /> 1. Área de Estudio
-            </h3>
-            <div className="grid grid-cols-3 gap-2">
-              {[
-                { id: 'All', label: 'Mix Total', icon: <Layers size={18} />, sub: '50 Pregs' },
-                { id: 'Verbal', label: 'Verbal', icon: <BookOpen size={18} />, sub: '10 Pregs' },
-                { id: 'Matemáticas', label: 'Mate', icon: <Calculator size={18} />, sub: '10 Pregs' },
-                { id: 'Cognitiva', label: 'Cognitiva', icon: <Brain size={18} />, sub: '10 Pregs' },
-                { id: 'Redacción', label: 'Redacción', icon: <PenTool size={18} />, sub: '10 Pregs' },
-                { id: 'Inglés', label: 'Inglés', icon: <Globe size={18} />, sub: '10 Pregs' },
-              ].map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategory(cat.id)}
-                  className={`flex flex-col items-center justify-center p-2 rounded-xl border-2 transition-all ${
-                    selectedCategory === cat.id
-                      ? 'border-blue-500 bg-blue-50 text-blue-700 font-bold'
-                      : 'border-slate-100 bg-white text-slate-500 hover:border-blue-200 hover:bg-slate-50'
-                  }`}
-                >
-                  {cat.icon}
-                  <span className="text-[10px] mt-1 font-bold">{cat.label}</span>
-                  <span className="text-[8px] opacity-70 font-normal">{cat.sub}</span>
-                </button>
-              ))}
+        <div className="max-w-md w-full glass-card rounded-3xl overflow-hidden relative z-10 mb-8 animate-bounce-in mx-4" style={{ boxShadow: 'var(--shadow-2xl)' }}>
+          <div className="relative p-6 md:p-10 text-white text-center overflow-hidden" style={{ background: 'var(--gradient-hero)' }}>
+            <div className="absolute inset-0 opacity-20">
+              <div className="absolute top-0 left-0 w-40 h-40 bg-white rounded-full blur-3xl"></div>
+              <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl"></div>
+            </div>
+            <Brain className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 animate-float relative z-10" style={{ filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.3))' }} />
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight relative z-10 mb-2">PAEP<span className="text-blue-200">Pro</span></h1>
+            <p className="text-white/95 text-base font-semibold mt-1 relative z-10">Plataforma de Estudio Integral</p>
+            <div className="absolute top-5 right-5 text-[11px] bg-white/25 px-3 py-1.5 rounded-full font-bold backdrop-blur-md z-10">
+              v{APP_VERSION}
             </div>
           </div>
 
-          <div>
-             <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-              <PlayCircle size={14} /> 2. Modo de Prueba
-            </h3>
-            <div className="space-y-3">
-              <button
-                onClick={() => generateQuiz(selectedCategory, 'practice')}
-                className="w-full group relative overflow-hidden rounded-xl bg-emerald-500 p-4 text-white shadow-lg transition-all hover:bg-emerald-600 hover:shadow-emerald-200"
-              >
-                <div className="relative z-10 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="rounded-lg bg-white/20 p-2"><Zap size={20} /></div>
-                    <div className="text-left">
-                      <div className="font-bold">Iniciar Práctica</div>
-                      <div className="text-xs text-emerald-100">
-                        {selectedCategory === 'All' ? '50 Preguntas (10/tema)' : '10 Preguntas del tema'}
+          <div className="p-8 space-y-7">
+            <div>
+              <h3 className="text-xs font-black text-black uppercase tracking-wider mb-4 flex items-center gap-2">
+                <Layers size={16} /> Área de Estudio
+              </h3>
+              <div className="grid grid-cols-3 gap-3">
+                {categories.map((cat, idx) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => setSelectedCategory(cat.id)}
+                    className={`category-btn flex flex-col items-center justify-center p-4 rounded-2xl border-2 text-black shadow-md font-bold transition-all animate-fade-in ${
+                      selectedCategory === cat.id
+                        ? `${cat.bgLight} ${cat.borderColor} ${cat.textColor} ring-2 ring-offset-1 scale-105`
+                        : 'border-transparent hover:scale-105'
+                    }`}
+                    style={{
+                      background: selectedCategory === cat.id ? '' : cat.gradient,
+                      animationDelay: `${idx * 0.05}s`
+                    }}
+                  >
+                    {cat.icon}
+                    <span className="text-[11px] mt-2 font-bold leading-tight">{cat.label}</span>
+                    <span className="text-[9px] opacity-80 font-medium mt-0.5">{cat.sub}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-xs font-black text-black uppercase tracking-wider mb-4 flex items-center gap-2">
+                <PlayCircle size={16} /> Modo de Prueba
+              </h3>
+              <div className="space-y-4">
+                <button
+                  onClick={() => generateQuiz(selectedCategory, 'practice')}
+                  className="w-full btn-premium btn-ripple group relative overflow-hidden rounded-2xl p-5 text-white shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 animate-slide-in-right"
+                  style={{ 
+                    background: 'var(--cat-mix)',
+                    boxShadow: 'var(--shadow-glow-success)',
+                    animationDelay: '0.3s'
+                  }}
+                >
+                  <div className="relative z-10 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="rounded-xl bg-white/25 p-3 backdrop-blur-sm"><Zap size={24} strokeWidth={2.5} /></div>
+                      <div className="text-left">
+                        <div className="font-black text-lg">Iniciar Práctica</div>
+                        <div className="text-sm text-white/90 font-medium mt-0.5">
+                          {selectedCategory === 'All' ? '50 Preguntas (10/tema)' : '10 Preguntas del tema'}
+                        </div>
+                      </div>
+                    </div>
+                    <ArrowRight size={22} className="transform transition-transform group-hover:translate-x-2" strokeWidth={2.5} />
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => generateQuiz('All', 'exam')}
+                  className="w-full btn-premium btn-ripple group relative overflow-hidden rounded-2xl border-3 p-5 text-black transition-all hover:scale-[1.03] duration-300 shadow-lg hover:shadow-xl animate-slide-in-right"
+                  style={{ 
+                    background: 'white',
+                    border: '2px solid rgba(168, 85, 247, 0.2)',
+                    animationDelay: '0.4s'
+                  }}
+                >
+                  <div className="relative z-10 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="rounded-xl bg-gradient-to-br from-purple-100 to-blue-100 p-3 group-hover:from-purple-200 group-hover:to-blue-200 transition-all">
+                        <Clock size={24} className="text-purple-600" strokeWidth={2.5} />
+                      </div>
+                      <div className="text-left">
+                        <div className="font-black text-lg">Simulacro Oficial</div>
+                        <div className="text-sm text-black group-hover:text-purple-700 transition-colors font-bold mt-0.5">Total reactivos oficiales</div>
                       </div>
                     </div>
                   </div>
-                  <ArrowRight className="transform transition-transform group-hover:translate-x-1" />
-                </div>
-              </button>
-
-              <button
-                onClick={() => generateQuiz('All', 'exam')}
-                className="w-full group relative overflow-hidden rounded-xl bg-white border-2 border-slate-200 p-4 text-slate-700 transition-all hover:border-blue-500 hover:text-blue-600"
-              >
-                <div className="relative z-10 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="rounded-lg bg-slate-100 p-2 group-hover:bg-blue-100"><Clock size={20} /></div>
-                    <div className="text-left">
-                      <div className="font-bold">Simulacro Oficial</div>
-                      <div className="text-xs text-slate-400 group-hover:text-blue-400">Total reactivos oficiales</div>
-                    </div>
-                  </div>
-                </div>
-              </button>
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <footer className="text-center text-slate-400 text-[10px] pb-4 space-y-1">
+      <footer className="text-center text-slate-600 font-medium text-[10px] pb-4 space-y-1">
         <p>PAEP Pro &copy; {new Date().getFullYear()} - Versión {APP_VERSION}</p>
         <p>Actualizado: {LAST_UPDATE}</p>
       </footer>
     </div>
-  );
+    );
+  };
 
   const QuizScreen = () => {
     const question = currentQuizQuestions[currentQuestionIdx];
@@ -316,64 +388,74 @@ export default function PAEPUltimateApp() {
     const progress = ((currentQuestionIdx + 1) / currentQuizQuestions.length) * 100;
 
     return (
-      <div className="min-h-screen bg-slate-100 flex flex-col items-center p-4">
-        <div className="w-full max-w-2xl flex justify-between items-center mb-4 pt-2">
+      <div className="min-h-screen relative flex flex-col items-center p-4" style={{ background: 'linear-gradient(to bottom, #f8fafc 0%, #f1f5f9 100%)' }}>
+        <div className="w-full max-w-2xl flex justify-between items-center mb-4 pt-2 animate-fade-in">
           <div className="flex items-center gap-2">
-            <span className="bg-slate-200 text-slate-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+            <span className="bg-slate-200 text-black px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
                {mode === 'exam' ? 'Simulacro' : 'Práctica'}
             </span>
           </div>
           <button 
             onClick={() => {
-              if (window.confirm('¿Seguro que quieres salir? Se perderá el progreso actual.')) {
-                setScreen('menu');
-              }
+              setScreen('menu'); // Navegación directa para evitar bloqueos
             }}
-            className="flex items-center gap-1 text-slate-400 hover:text-red-500 transition-colors text-sm font-medium px-2 py-1 hover:bg-red-50 rounded-lg"
+            className="flex items-center gap-1 text-slate-500 hover:text-red-600 transition-colors text-sm font-bold px-2 py-1 hover:bg-red-50 rounded-lg"
           >
             <X size={18} /> Salir
           </button>
         </div>
 
-        <div className="w-full max-w-2xl mb-4">
-          <div className="flex justify-between items-end mb-2">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Pregunta {currentQuestionIdx + 1} de {currentQuizQuestions.length}</span>
-            <span className="text-xs font-bold text-blue-600">{Math.round(progress)}%</span>
+        <div className="w-full max-w-2xl mb-5 animate-fade-in">
+          <div className="flex justify-between items-end mb-3">
+            <span className="text-xs font-extrabold text-black uppercase tracking-wider">Pregunta {currentQuestionIdx + 1} de {currentQuizQuestions.length}</span>
+            <span className="text-sm font-black text-blue-600 tabular-nums">{Math.round(progress)}%</span>
           </div>
-          <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
-            <div className="h-full bg-blue-600 transition-all duration-300" style={{ width: `${progress}%` }}></div>
+          <div className="h-3 w-full bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 rounded-full overflow-hidden shadow-inner relative">
+            <div 
+              className="h-full transition-all duration-700 ease-out shadow-lg progress-liquid relative" 
+              style={{ 
+                width: `${progress}%`,
+                background: 'var(--gradient-progress)'
+              }}
+            >
+              <div className="absolute inset-0 opacity-30 mix-blend-overlay" style={{
+                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent)',
+                animation: 'shimmer 2s infinite'
+              }}></div>
+            </div>
           </div>
         </div>
 
-        <div className="w-full max-w-2xl bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex-1 flex flex-col">
-          <div className="p-6 border-b border-slate-50 bg-slate-50/50">
-            <div className="flex justify-between items-start mb-3">
-              <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider ${
-                 question.category === 'Matemáticas' ? 'bg-purple-100 text-purple-600' :
-                 question.category === 'Verbal' ? 'bg-amber-100 text-amber-600' :
-                 question.category === 'Inglés' ? 'bg-pink-100 text-pink-600' :
-                 'bg-blue-100 text-blue-600'
+        <div className="w-full max-w-2xl glass-card rounded-3xl overflow-hidden flex-1 flex flex-col animate-slide-up shadow-2xl">
+          <div className="p-8 border-b border-slate-100/50 bg-gradient-to-br from-slate-50/80 to-white/60">
+            <div className="flex justify-between items-start mb-4">
+              <span className={`px-3 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider shadow-sm ${
+                 question.category === 'Matemáticas' ? 'bg-purple-100 text-purple-700' :
+                 question.category === 'Verbal' ? 'bg-amber-100 text-amber-700' :
+                 question.category === 'Inglés' ? 'bg-pink-100 text-pink-700' :
+                 question.category === 'Redacción' ? 'bg-pink-100 text-pink-700' :
+                 'bg-blue-100 text-blue-700'
               }`}>
                 {question.category}
               </span>
               {question.source === 'Guía Oficial' && (
-                <span className="flex items-center gap-1 text-[10px] font-semibold text-slate-400">
-                  <Star size={10} fill="currentColor" /> Oficial
+                <span className="flex items-center gap-1.5 text-[11px] font-bold text-slate-400 bg-slate-100 px-2.5 py-1 rounded-lg">
+                  <Star size={12} fill="currentColor" /> Oficial
                 </span>
               )}
             </div>
-            <h2 className="text-lg md:text-xl font-bold text-slate-800 leading-snug">{question.question}</h2>
+            <h2 className="text-xl md:text-2xl font-black text-black leading-snug">{question.question}</h2>
           </div>
 
-          <div className="p-6 space-y-3 flex-1 overflow-y-auto">
+          <div className="p-8 space-y-4 flex-1 overflow-y-auto">
             {question.options.map((opt, idx) => {
-              let style = "border-slate-200 hover:bg-slate-50 text-slate-700";
+              let style = "border-slate-300 hover:bg-slate-100 hover:border-slate-400 text-black hover:shadow-md font-medium";
               if (mode === 'practice' && showExplanation) {
-                if (idx === question.correctAnswer) style = "bg-emerald-50 border-emerald-500 text-emerald-800 ring-1 ring-emerald-500 font-medium";
-                else if (answers[currentQuestionIdx] === idx) style = "bg-red-50 border-red-500 text-red-800 ring-1 ring-red-500";
-                else style = "opacity-50 border-slate-100";
+                if (idx === question.correctAnswer) style = "bg-emerald-50 border-emerald-400 text-emerald-900 ring-2 ring-emerald-200 font-bold shadow-lg";
+                else if (answers[currentQuestionIdx] === idx) style = "bg-red-50 border-red-400 text-red-900 ring-2 ring-red-200";
+                else style = "opacity-40 border-slate-100";
               } else if (mode === 'exam' && isAnswered) {
-                if (answers[currentQuestionIdx] === idx) style = "bg-blue-600 border-blue-600 text-white shadow-md transform scale-[1.01]";
+                if (answers[currentQuestionIdx] === idx) style = "bg-gradient-to-r from-blue-500 to-blue-600 border-blue-600 text-white shadow-xl transform scale-[1.02] font-bold";
               }
 
               return (
@@ -381,11 +463,12 @@ export default function PAEPUltimateApp() {
                   key={idx}
                   onClick={() => handleAnswer(idx)}
                   disabled={isAnswered && mode === 'practice'}
-                  className={`w-full text-left p-4 rounded-xl border-2 transition-all flex items-center justify-between text-sm md:text-base ${style}`}
+                  className={`w-full text-left px-5 py-4 rounded-2xl border-2 transition-all duration-300 flex items-center justify-between text-base md:text-lg ${style}`}
+                  style={{ transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)' }}
                 >
-                  <span>{opt}</span>
-                  {mode === 'practice' && showExplanation && idx === question.correctAnswer && <CheckCircle size={18} className="text-emerald-600 min-w-[18px]"/>}
-                  {mode === 'practice' && showExplanation && answers[currentQuestionIdx] === idx && idx !== question.correctAnswer && <XCircle size={18} className="text-red-600 min-w-[18px]"/>}
+                  <span className="pr-2">{opt}</span>
+                  {mode === 'practice' && showExplanation && idx === question.correctAnswer && <CheckCircle size={20} className="text-emerald-600 min-w-[20px]"/>}
+                  {mode === 'practice' && showExplanation && answers[currentQuestionIdx] === idx && idx !== question.correctAnswer && <XCircle size={20} className="text-red-600 min-w-[20px]"/>}
                 </button>
               );
             })}
@@ -401,7 +484,7 @@ export default function PAEPUltimateApp() {
                    <h4 className={`text-sm font-bold mb-1 ${isCorrect ? 'text-emerald-800' : 'text-red-800'}`}>
                      {isCorrect ? '¡Correcto!' : 'Respuesta Incorrecta'}
                    </h4>
-                   <p className="text-sm text-slate-600 leading-relaxed">{question.explanation}</p>
+                   <p className="text-sm text-black leading-relaxed">{question.explanation}</p>
                    {question.category === 'Inglés' && <p className="text-xs text-slate-400 mt-2 italic flex items-center gap-1"><Globe size={10} /> Explicación en español.</p>}
                  </div>
                </div>
@@ -428,40 +511,118 @@ export default function PAEPUltimateApp() {
   const ResultsScreen = () => {
     const percentage = Math.round((score / currentQuizQuestions.length) * 100);
     const passed = percentage >= 60;
+    const [showConfetti, setShowConfetti] = useState(passed);
+    
+    // Circular progress ring calculations
+    const circumference = 2 * Math.PI * 90; // radius = 90
+    const offset = circumference - (percentage / 100) * circumference;
+
+    useEffect(() => {
+      if (passed) {
+        const timer = setTimeout(() => setShowConfetti(false), 5000);
+        return () => clearTimeout(timer);
+      }
+    }, [passed]);
 
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-        <div className="bg-white p-8 rounded-3xl shadow-2xl text-center max-w-sm w-full border border-slate-100 relative overflow-hidden">
-          <div className={`absolute top-0 left-0 w-full h-2 ${passed ? 'bg-emerald-500' : 'bg-red-500'}`}></div>
+      <div className="min-h-screen relative flex items-center justify-center p-4 overflow-hidden" style={{ background: 'linear-gradient(135deg, #f8fafc 0%, #e0e7ff 50%, #ddd6fe 100%)' }}>
+        {showConfetti && (
+          <div className="absolute inset-0 pointer-events-none">
+            {[...Array(100)].map((_, i) => (
+              <div
+                key={i}
+                className="confetti"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 3}s`,
+                  animationDuration: `${2 + Math.random() * 2}s`
+                }}
+              />
+            ))}
+          </div>
+        )}
+        
+        <div className="glass-card p-10 rounded-3xl text-center max-w-lg w-full relative overflow-hidden animate-bounce-in" style={{ boxShadow: 'var(--shadow-2xl)' }}>
+          <div className={`absolute top-0 left-0 w-full h-4 ${passed ? 'bg-gradient-to-r from-emerald-400 via-green-500 to-teal-500' : 'bg-gradient-to-r from-red-400 via-orange-500 to-rose-500'}`}></div>
           
-          <div className="mb-6 inline-flex p-4 rounded-full bg-slate-50 border border-slate-100">
-            {passed ? <Award size={48} className="text-emerald-500" /> : <BarChart3 size={48} className="text-red-500" />}
+          {/* Circular Progress Ring */}
+          <div className="mb-8 inline-flex relative">
+            {passed && (
+              <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 animate-bounce-in" style={{ animationDelay: '0.5s' }}>
+                <Award size={64} className="text-amber-400" style={{ filter: 'drop-shadow(0 8px 16px rgba(251, 191, 36, 0.5))' }} />
+              </div>
+            )}
+            <svg className="transform -rotate-90" width="220" height="220">
+              {/* Background circle */}
+              <circle
+                cx="110"
+                cy="110"
+                r="90"
+                stroke={passed ? "#d1fae5" : "#fee2e2"}
+                strokeWidth="12"
+                fill="none"
+              />
+              {/* Progress circle */}
+              <circle
+                cx="110"
+                cy="110"
+                r="90"
+                stroke={passed ? "url(#successGradient)" : "url(#dangerGradient)"}
+                strokeWidth="12"
+                fill="none"
+                strokeDasharray={circumference}
+                strokeDashoffset={offset}
+                strokeLinecap="round"
+                className="transition-all duration-1000 ease-out"
+                style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.15))' }}
+              />
+              <defs>
+                <linearGradient id="successGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#10b981" />
+                  <stop offset="100%" stopColor="#059669" />
+                </linearGradient>
+                <linearGradient id="dangerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#ef4444" />
+                  <stop offset="100%" stopColor="#f97316" />
+                </linearGradient>
+              </defs>
+            </svg>
+            {/* Score in the center */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <div className="text-6xl font-black text-black mb-1" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                {score}
+              </div>
+              <div className="text-xl text-slate-600 font-bold">/ {currentQuizQuestions.length}</div>
+              <div className={`text-3xl font-black mt-1 ${passed ? 'text-emerald-600' : 'text-red-600'}`}>
+                {percentage}%
+              </div>
+            </div>
           </div>
 
-          <h2 className="text-4xl font-black text-slate-800 mb-1">{score} <span className="text-2xl text-slate-300">/ {currentQuizQuestions.length}</span></h2>
-          <div className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-6 ${passed ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
-            {passed ? 'APROBADO' : 'NECESITAS REPASAR'}
+          <div className={`inline-block px-6 py-3 rounded-full text-sm font-black mb-6 shadow-lg animate-bounce-in ${passed ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white' : 'bg-gradient-to-r from-red-500 to-orange-500 text-white'}`} style={{ animationDelay: '0.3s' }}>
+            {passed ? '✨ ¡APROBADO! ✨' : '📚 NECESITAS REPASAR'}
           </div>
 
-          <p className="text-slate-500 text-sm mb-8 leading-relaxed">
+          <p className="text-black text-base mb-8 leading-relaxed font-bold max-w-md mx-auto">
             {selectedCategory === 'All' && mode === 'practice'
               ? `Has completado el examen completo de 50 preguntas. Tu rendimiento general es del ${percentage}%.`
               : mode === 'exam' 
                 ? `Has completado el simulacro oficial con el total de reactivos. Rendimiento: ${percentage}%.`
-                : `Has completado la práctica de ${selectedCategory}.`
+                : `Has completado la práctica de ${selectedCategory} con un ${percentage}% de acierto.`
             }
           </p>
 
-          <div className="space-y-3">
+          <div className="space-y-4">
             <button 
               onClick={() => generateQuiz(selectedCategory, mode)} 
-              className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-200 transition-all flex items-center justify-center gap-2"
+              className="w-full btn-premium btn-ripple py-5 rounded-2xl font-black text-lg shadow-xl transition-all flex items-center justify-center gap-3 text-white hover:scale-[1.03] duration-300"
+              style={{ background: 'var(--gradient-hero)', boxShadow: 'var(--shadow-glow)' }}
             >
-              <RotateCcw size={18} /> Repetir Prueba
+              <RefreshCw size={22} strokeWidth={2.5} /> Repetir Prueba
             </button>
             <button 
               onClick={() => setScreen('menu')} 
-              className="w-full py-3.5 bg-white border-2 border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50 rounded-xl font-bold transition-all"
+              className="w-full py-5 bg-white/90 backdrop-blur border-2 border-slate-300 text-black hover:border-slate-500 hover:bg-white rounded-2xl font-black text-lg transition-all hover:scale-[1.02] hover:shadow-lg duration-300"
             >
               Volver al Menú
             </button>
